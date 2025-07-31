@@ -1,0 +1,21 @@
+{
+    "Accuracy": 0.5384615384615384,
+    "Off-by-One Accuracy": 0.9570135746606335,
+    "Macro-F1 Score": 0.5329226356311374,
+    "Weighted-F1 Score": 0.5343188977953112,
+    "Matthews Correlation Coefficient": 0.5866317281371393,
+    "Quadratic Weighted Kappa": 0.8396538150128162,
+    "Macro-Average Mean Absolute Error": 0.48907691069147247,
+    "Mean Absolute Error": 0.5081447963800905,
+    "Mean Squared Error": 0.6104072398190046,
+    "Invalid Prediction Rate": 0.0,
+    "Valid-Only MMAE": 0.48907691069147247,
+    "Average end-to-end latency": 550.6572685185521,
+    "Median end-to-end latency": 572.7302195,
+    "P95 end-to-end latency": 605.2142592,
+    "Average time to first token": 235.25402940407238,
+    "Requests per second": 1.8160116231468744,
+    "Output tokens per second": 29.305098489150474,
+    "VRAM Used MiB": 15726.8,
+    "GPU Residency Pct": 100.0
+}
