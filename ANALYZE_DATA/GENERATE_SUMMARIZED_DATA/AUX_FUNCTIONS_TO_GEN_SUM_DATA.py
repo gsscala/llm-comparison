@@ -1,5 +1,5 @@
 import numpy as np
-import pygmo as pg
+# import pygmo as pg
 
 def calc_error_metrics(data: dict):
     predicted_labels = []
@@ -9,6 +9,12 @@ def calc_error_metrics(data: dict):
         true_labels.append(instance["true_label"])
     predicted_labels = np.array(predicted_labels)
     true_labels = np.array(true_labels)
+    
+    mask = (predicted_labels >= 0) & (predicted_labels < 5) & (true_labels >= 0) & (true_labels < 5)
+    if not np.any(mask):
+        return 0.0
+    predicted_labels = predicted_labels[mask]
+    true_labels = true_labels[mask]
     
     diff = predicted_labels - true_labels
     sqr_diff = diff * diff
@@ -162,50 +168,50 @@ def calc_time_metrics(stats:dict):
     
     return avg_eel, avg_ttft, rps, tps
 
-def find_best_model_by_hv_contribution(models):
-    """
-    Finds the best model in a set of non-dominated solutions using the
-    hypervolume contribution method for a maximization problem.
+# def find_best_model_by_hv_contribution(models):
+#     """
+#     Finds the best model in a set of non-dominated solutions using the
+#     hypervolume contribution method for a maximization problem.
 
-    Args:
-        models (np.ndarray): A 2D numpy array where each row is a model
-                             and each column is an objective value.
+#     Args:
+#         models (np.ndarray): A 2D numpy array where each row is a model
+#                              and each column is an objective value.
 
-    Returns:
-        tuple: A tuple containing the best model (np.ndarray) and its
-               hypervolume contribution (float).
-    """
-    # 1. Define the Reference Point (for maximization)
-    # The reference point must be worse than any model in all objectives.
-    # We find the minimum value for each objective and subtract a small amount.
-    ref_point = np.min(models, axis=0) - 1
-    print(f"Calculated Reference Point: {ref_point}\n")
+#     Returns:
+#         tuple: A tuple containing the best model (np.ndarray) and its
+#                hypervolume contribution (float).
+#     """
+#     # 1. Define the Reference Point (for maximization)
+#     # The reference point must be worse than any model in all objectives.
+#     # We find the minimum value for each objective and subtract a small amount.
+#     ref_point = np.min(models, axis=0) - 1
+#     print(f"Calculated Reference Point: {ref_point}\n")
 
-    # 2. Calculate the Total Hypervolume
-    # pygmo's hypervolume calculator assumes minimization, so we must invert
-    # our models and reference point to simulate a maximization problem.
-    hv = pg.hypervolume(-models)
-    total_hv = hv.compute(-ref_point)
-    print(f"Total Hypervolume of the set: {total_hv:.4f}\n")
+#     # 2. Calculate the Total Hypervolume
+#     # pygmo's hypervolume calculator assumes minimization, so we must invert
+#     # our models and reference point to simulate a maximization problem.
+#     hv = pg.hypervolume(-models)
+#     total_hv = hv.compute(-ref_point)
+#     print(f"Total Hypervolume of the set: {total_hv:.4f}\n")
 
-    # 3. Calculate Each Model's Contribution
-    contributions = []
-    for i in range(len(models)):
-        # Create a temporary set without the current model
-        temp_models = np.delete(models, i, axis=0)
+#     # 3. Calculate Each Model's Contribution
+#     contributions = []
+#     for i in range(len(models)):
+#         # Create a temporary set without the current model
+#         temp_models = np.delete(models, i, axis=0)
 
-        # Calculate the hypervolume of the temporary set
-        temp_hv_calculator = pg.hypervolume(-temp_models)
-        hv_without_model = temp_hv_calculator.compute(-ref_point)
+#         # Calculate the hypervolume of the temporary set
+#         temp_hv_calculator = pg.hypervolume(-temp_models)
+#         hv_without_model = temp_hv_calculator.compute(-ref_point)
 
-        # The contribution is the difference
-        contribution = total_hv - hv_without_model
-        contributions.append(contribution)
-        print(f"Model {i+1} {models[i]}: Contribution = {contribution:.4f}")
+#         # The contribution is the difference
+#         contribution = total_hv - hv_without_model
+#         contributions.append(contribution)
+#         print(f"Model {i+1} {models[i]}: Contribution = {contribution:.4f}")
 
-    # 4. Identify the Best Model
-    best_model_index = np.argmax(contributions)
-    best_model = models[best_model_index]
-    max_contribution = contributions[best_model_index]
+#     # 4. Identify the Best Model
+#     best_model_index = np.argmax(contributions)
+#     best_model = models[best_model_index]
+#     max_contribution = contributions[best_model_index]
 
-    return best_model, max_contribution
+#     return best_model, max_contribution

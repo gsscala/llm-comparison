@@ -1,6 +1,6 @@
 import json
 import os
-from aux_functions import *
+from ANALYZE_DATA.GENERATE_SUMMARIZED_DATA.AUX_FUNCTIONS_TO_GEN_SUM_DATA import *
 
 os.makedirs("summarized_data", exist_ok=True)
 
