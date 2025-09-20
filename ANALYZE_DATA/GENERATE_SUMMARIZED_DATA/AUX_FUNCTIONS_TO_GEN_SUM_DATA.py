@@ -22,8 +22,15 @@ def calc_error_metrics(data: dict):
     mean_sqr_error = np.mean(sqr_diff)
     mean_abs_error = np.mean(abs_diff)
     off_by_one = np.mean(abs_diff <= 1)
+    accuracy = np.mean(abs_diff == 0)
     
-    return float(mean_abs_error), float(mean_sqr_error), float(off_by_one)
+    per_class_mae = []
+    for c in range(5):
+        cls_mask = (true_labels == c)
+        if np.any(cls_mask):
+            per_class_mae.append(np.mean(np.abs(predicted_labels[cls_mask] - true_labels[cls_mask])))
+
+    return float(mean_abs_error), float(mean_sqr_error), float(off_by_one), accuracy, float(np.mean(per_class_mae))
 
 def calc_qwk(data: dict):
     predicted_labels = []
@@ -163,7 +170,7 @@ def calc_time_metrics(stats:dict):
     avg_eel = np.mean(end_to_end_latency_ms)
     avg_ttft = np.mean(time_to_first_token_ms)
     avg_tpot = np.mean(time_per_output_token_ms)
-    rps = 1 / avg_eel
+    rps = 1000 / avg_eel
     tps = 1000 / avg_tpot
     
     return avg_eel, avg_ttft, rps, tps
